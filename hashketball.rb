@@ -1,4 +1,5 @@
 # Write your code below game_hash
+require 'pry'
 def game_hash
   {
     home: {
@@ -126,4 +127,81 @@ def game_hash
   }
 end
 
-# Write code here
+
+def num_points_scored(player_name)
+  home_players_names = game_hash[:home][:players].map{ |player| player[:player_name] }
+  home_players_names.include?(player_name) ?  game_hash[:home][:players].find { |player| player[:player_name] == player_name }[:points] : game_hash[:away][:players].find { |player| player[:player_name] == player_name }[:points]
+end
+
+def shoe_size (player_name)
+  home_players_names = game_hash[:home][:players].map{ |player| player[:player_name] }
+  home_players_names.include?(player_name) ?  game_hash[:home][:players].find { |player| player[:player_name] == player_name }[:shoe] : game_hash[:away][:players].find { |player| player[:player_name] == player_name }[:shoe]
+end
+
+def team_colors (team_name)
+  if team_name == "Charlotte Hornets"
+    game_hash[:away][:colors]
+  elsif team_name == "Brooklyn Nets"
+    game_hash[:home][:colors]
+  end
+end
+
+def team_names
+  game_hash.keys.map { |team| game_hash[team][:team_name] }
+end
+
+def player_numbers (team_name)
+  if team_name == "Charlotte Hornets"
+    game_hash[:away][:players].map { |player| player[:number]}
+  elsif team_name == "Brooklyn Nets"
+    game_hash[:home][:players].map { |player| player[:number]}
+  end
+end
+
+def player_stats (player_name)
+  home_players_names = game_hash[:home][:players].map{ |player| player[:player_name] }
+  home_players_names.include?(player_name) ?  game_hash[:home][:players].find { |player| player[:player_name] == player_name } : game_hash[:away][:players].find { |player| player[:player_name] == player_name }
+end
+
+def big_shoe_rebounds
+  all_players = game_hash.keys.map { |key| game_hash[key][:players] }.flatten
+  all_shoe_sizes = all_players.map { |player| player[:shoe] }  
+  biggest_shoe = all_shoe_sizes.max
+  all_players.find { |player| player[:shoe] == biggest_shoe}[:rebounds]
+end
+
+def most_points_scored 
+  all_players = game_hash.keys.map { |key| game_hash[key][:players] }.flatten
+  all_scores = all_players.map { |player| player[:points] }  
+  all_scores.max
+end
+
+def winning_team
+  home_points = game_hash[:home][:players].map{ |player| player[:points] }.sum
+  away_points = game_hash[:away][:players].map{ |player| player[:points] }.sum
+  winner = (home_points > away_points) ? "Brooklyn Nets" : "Charlotte Hornets"
+end
+
+def player_with_longest_name
+  all_players = game_hash.keys.map { |key| game_hash[key][:players] }.flatten
+  longest_name_length = all_players.map { |player| player[:player_name].length}.max
+  longest_name = all_players.filter { |player|  player[:player_name].length == longest_name_length}
+  longest_name[0][:player_name]
+end
+
+def long_name_steals_a_ton
+  long_name = player_with_longest_name()
+  long_name_steals = player_stats(long_name)[:steals]
+
+  all_players = game_hash.keys.map { |key| game_hash[key][:players] }.flatten
+  most_steals = all_players.map { |player| player[:steals] }.max
+
+  (long_name_steals == most_steals) ? true : false
+
+end
+
+
+
+
+
+
